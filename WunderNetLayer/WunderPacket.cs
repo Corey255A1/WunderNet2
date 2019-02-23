@@ -12,6 +12,7 @@ namespace WunderNetLayer
         public static byte[] PREFIX = new byte[2] { (byte)'\n', (byte)'\0' };
         public Int32 Version;
         public Int16 ID;
+        public string Name;
         private Dictionary<string, FieldDefinition> Fields = new Dictionary<string, FieldDefinition>();
         private List<FieldDefinition> OrderdedFields = new List<FieldDefinition>();
         //PREFIX + VERSION + ID
@@ -53,9 +54,12 @@ namespace WunderNetLayer
 
         public WunderPacket CreateNew()
         {
-            var clone = new WunderPacket();
-            clone.ID = this.ID;
-            clone.Version = this.Version;
+            var clone = new WunderPacket
+            {
+                Name = this.Name,
+                ID = this.ID,
+                Version = this.Version
+            };
             foreach (var key in this.Fields.Keys)
             {
                 clone.AddFieldDefinition(key, this.Fields[key].ValueType, this.Fields[key].Count);
@@ -63,11 +67,12 @@ namespace WunderNetLayer
             return clone;
         }
 
-        public WunderPacket CreateFromBytes(byte[] bytes)
+        public WunderPacket CreateFromBytes(byte[] bytes, ref int offset)
         {
-            if (bytes.Length == this.PacketSize)
+            if (bytes.Length >=
+                this.PacketSize)
             {
-                int offset = DATAOFFSET;
+                offset += DATAOFFSET;
                 WunderPacket newwp = this.CreateNew();
                 for (int f = 0; f < newwp.OrderdedFields.Count; ++f)
                 {

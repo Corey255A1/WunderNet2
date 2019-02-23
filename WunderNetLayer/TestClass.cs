@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WunderNet
+namespace WunderNetLayer
 {
     class TestClass
     {
@@ -17,10 +17,12 @@ namespace WunderNet
             o.Set("VX", 3.4);
             Console.WriteLine(w.ToString());
             Console.WriteLine(o.ToString());
-            WunderPacket decode = layerTest.GetFromBytes(test);
+            int offset = 0;
+            WunderPacket decode = layerTest.GetFromBytes(test, ref offset);
             Console.WriteLine("Decoded Data: " + decode.Get("MessageData"));
             test = o.GetBytes();
-            decode = layerTest.GetFromBytes(test);
+            offset = 0;
+            decode = layerTest.GetFromBytes(test, ref offset);
             Console.WriteLine("Decoded Data: " + decode.Get("VX"));
             return true;
         }

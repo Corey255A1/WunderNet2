@@ -17,7 +17,7 @@ namespace WunderNetLayer
                 foreach(var p in packets.PacketList)
                 {
                     Console.WriteLine(p.ToString() +"\n");
-                    var wp = new WunderPacket() { ID = ids++, Version = Convert.ToInt32(packets.Version) };
+                    var wp = new WunderPacket() {Name = p.Name, ID = ids++, Version = Convert.ToInt32(packets.Version) };
                     foreach(var f in p.FieldList)
                     {
                         wp.AddFieldDefinition(f.Name, f.Type, f.Size);
@@ -28,14 +28,14 @@ namespace WunderNetLayer
             }
         }
 
-        public WunderPacket GetFromBytes(byte[] bytes)
+        public WunderPacket GetFromBytes(byte[] bytes, ref int offset)
         {
             if (bytes[0] == WunderPacket.PREFIX[0] && bytes[1] == WunderPacket.PREFIX[1])
             {
                 int id = WunderPacket.GetPacketID(bytes);
                 if (id < OrderedDefinitions.Count)
                 {
-                    return OrderedDefinitions[id].CreateFromBytes(bytes);
+                    return OrderedDefinitions[id].CreateFromBytes(bytes, ref offset);
                 }
             }
             return null;

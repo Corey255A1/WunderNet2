@@ -1,48 +1,31 @@
 ﻿using System;
 using System.Text;
 using System.Net.Sockets;
+using System.Net;
+using WunderNetLayer;
 namespace WunderNet
 {
+    public delegate void WunderPacketClientReceivedCallback(EndPoint id, WunderPacket packet);
     public class ClientHandler
     {
         TcpClient _client;
-        NetworkStream _stream;
-        const int BUFFERSIZE = 1024;
-        byte[] buffer = new byte[BUFFERSIZE];
-        public ClientHandler(TcpClient c)
+        StreamProcessor _processor;
+        public WunderPacketClientReceivedCallback WunderPacketReceived;
+        public ClientHandler(WunderLayer packetDecoder, TcpClient c)
         {
             _client = c;
-            _stream = _client.GetStream();
-            ReadData();
+            
+            _processor = new StreamProcessor(packetDecoder, _client.Client.RemoteEndPoint, _client.GetStream(), 1024);
+            _processor.PacketReceived += PacketReceived;
+            _processor.BeginReadData();
         }
-        private async void ReadData()
+        public async void WriteData(WunderPacket p)
         {
-            try
-            {
-                int bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
-                while (bytesread > 0)
-                {
-                    Console.WriteLine("SERVER:"+Encoding.ASCII.GetString(buffer, 0, bytesread));
-                    if (!_client.Connected) break;
-                    await WriteData("WOOP");
-
-                    bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
-                }
-            }
-            catch
-            {
-                Console.WriteLine("Client Read Aborted");
-            }
-            Console.WriteLine("DONE");
+            await _processor.WriteData(p.GetBytes());
         }
-        public async System.Threading.Tasks.Task<bool> WriteData(string data)
+        public void PacketReceived(WunderPacket wp)
         {
-            if (_client.Connected)
-            {
-                await _stream.WriteAsync(Encoding.ASCII.GetBytes(data), 0, data.Length);
-                return true;
-            }
-            return false;
+            WunderPacketReceived?.Invoke(_client.Client.RemoteEndPoint, wp);
         }
     }
 }

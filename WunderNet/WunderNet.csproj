@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WunderNetLayer\WunderNetLayer.csproj" />
     <ProjectReference Include="..\WunderServer\WunderServer.csproj" />
   </ItemGroup>
 
