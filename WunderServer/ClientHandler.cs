@@ -17,18 +17,32 @@ namespace WunderNet
         }
         private async void ReadData()
         {
-            int bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
-            while (bytesread > 0)
+            try
             {
-                Console.WriteLine("SERVER:"+Encoding.ASCII.GetString(buffer, 0, bytesread));
+                int bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
+                while (bytesread > 0)
+                {
+                    Console.WriteLine("SERVER:"+Encoding.ASCII.GetString(buffer, 0, bytesread));
+                    if (!_client.Connected) break;
+                    await WriteData("WOOP");
 
-                bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
+                    bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
+                }
             }
-
+            catch
+            {
+                Console.WriteLine("Client Read Aborted");
+            }
+            Console.WriteLine("DONE");
         }
-        public async void WriteData(string data)
+        public async System.Threading.Tasks.Task<bool> WriteData(string data)
         {
-            await _stream.WriteAsync(Encoding.ASCII.GetBytes(data), 0, data.Length);
+            if (_client.Connected)
+            {
+                await _stream.WriteAsync(Encoding.ASCII.GetBytes(data), 0, data.Length);
+                return true;
+            }
+            return false;
         }
     }
 }

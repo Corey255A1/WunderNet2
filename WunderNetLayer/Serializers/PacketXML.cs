@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Serialization;
-namespace WunderNet.Serializers
+namespace WunderNetLayer.Serializers
 {
     [XmlRoot("Packets")]
     public class Packets : Stringable

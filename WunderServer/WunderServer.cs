@@ -15,7 +15,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
-
+using WunderNetLayer;
 namespace WunderNet
 {
     public delegate void NewConnectionEvent(ClientHandler ch);
@@ -28,7 +28,7 @@ namespace WunderNet
         public WunderServer(string xmlpath)
         {
             _tcpServer = new TcpListener(new IPEndPoint(IPAddress.Any, 1234));
-            var layerTest = new WunderLayer(xmlpath);
+
         }
 
         public async void AcceptConnections()
