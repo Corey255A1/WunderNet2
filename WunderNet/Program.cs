@@ -12,7 +12,6 @@ namespace WunderNetTest
     {
         static WunderTCPServer ws;
         static WunderTCPClient wc;
-        static WunderNetLayer.WunderLayer decoder;
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
@@ -21,6 +20,7 @@ namespace WunderNetTest
 
             ws.NewConnection += NewConnection;
             ws.AddDataCallback("Message", ServerMessage);
+            ws.AddDataCallback("WorldInfo", ServerWorldInfo);
             ws.AcceptConnections();
 
 
@@ -33,9 +33,24 @@ namespace WunderNetTest
         static void ClientMessage(WunderPacket packet)
         {
             Console.WriteLine(packet.Get("MessageData"));
+
+            var lotsofdata = wc.GetNewPacket("WorldInfo");
+
+            for (int i = 0; i < 100; i++)
+            {
+                lotsofdata.Set("Width", i * 10);
+                wc.Send(lotsofdata);
+            }
+
+
             var resp = wc.GetNewPacket("Message");
             resp.Set("MessageData", "I'm a client responding to the server!");
             wc.Send(resp);
+        }
+
+        static void ServerWorldInfo(ClientHandler client, WunderPacket packet)
+        {
+            Console.WriteLine(packet.Get("Width"));
         }
 
         static void ServerMessage(ClientHandler client, WunderPacket packet)

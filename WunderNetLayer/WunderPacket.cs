@@ -21,13 +21,13 @@ namespace WunderNetLayer
         //Prefix 2Bytes
         //Version 4Bytes
         //ID 2Bytes
-        public static int GetPacketID(byte[] bytes)
+        public static int GetPacketID(byte[] bytes, int offset)
         {
-            return (int)BitConverter.ToInt16(bytes, 6);
+            return (int)BitConverter.ToInt16(bytes, offset+6);
         }
-        public static int GetPacketVersion(byte[] bytes)
+        public static int GetPacketVersion(byte[] bytes, int offset)
         {
-            return BitConverter.ToInt32(bytes, 2);
+            return BitConverter.ToInt32(bytes, offset+2);
         }
 
 
@@ -69,8 +69,7 @@ namespace WunderNetLayer
 
         public WunderPacket CreateFromBytes(byte[] bytes, ref int offset)
         {
-            if (bytes.Length >=
-                this.PacketSize)
+            if (bytes.Length - offset >= this.PacketSize)
             {
                 offset += DATAOFFSET;
                 WunderPacket newwp = this.CreateNew();

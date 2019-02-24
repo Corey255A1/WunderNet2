@@ -9,15 +9,13 @@ namespace WunderNetLayer
     public delegate void WunderPacketReceivedCallback(WunderPacket packet);
     public class StreamProcessor
     {
-        NetworkStream _stream;
-        WunderLayer _decoder;
-        EndPoint _endpointID;
+        private NetworkStream _stream;
+        private WunderLayer _decoder;
+        private EndPoint _endpointID;
         private int BUFFERSIZE;
-        private byte[] buffer;
-
-        public event WunderPacketReceivedCallback PacketReceived;
-
-        
+        private byte[] _buffer;
+        private int _dataoffset;
+        public event WunderPacketReceivedCallback PacketReceived;        
 
         public StreamProcessor(WunderLayer decoder, EndPoint endpoint, NetworkStream stream, int buffersize)
         {
@@ -25,19 +23,31 @@ namespace WunderNetLayer
             _endpointID = endpoint;
             _stream = stream;
             _decoder = decoder;
-            buffer = new byte[BUFFERSIZE];
+            _buffer = new byte[BUFFERSIZE];
         }
         public async void BeginReadData()
         {
             try
             {
-                int bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
+                int bytesread = await _stream.ReadAsync(_buffer, 0, BUFFERSIZE);
                 while (bytesread > 0)
                 {
-                    int offset = 0; //Not Using this currently
-                    var packet = _decoder.GetFromBytes(buffer, ref offset);
-                    if (packet != null) PacketReceived?.Invoke(packet);
-                    bytesread = await _stream.ReadAsync(buffer, 0, BUFFERSIZE);
+                    int offset = 0;
+                    do
+                    {
+                        var packet = _decoder.GetFromBytes(_buffer, ref offset);
+                        if (packet != null)
+                        {
+                            PacketReceived?.Invoke(packet);                            
+                        }
+                        else if(offset < bytesread)
+                        {
+                            _dataoffset = bytesread - offset;
+                            Array.Copy(_buffer, offset, _buffer, 0, _dataoffset);
+                            break;
+                        }
+                    } while (offset < bytesread);
+                    bytesread = await _stream.ReadAsync(_buffer, _dataoffset, BUFFERSIZE-_dataoffset);
                 }
             }
             catch

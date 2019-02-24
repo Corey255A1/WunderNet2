@@ -32,7 +32,7 @@ namespace WunderNetLayer
         {
             if (bytes[0] == WunderPacket.PREFIX[0] && bytes[1] == WunderPacket.PREFIX[1])
             {
-                int id = WunderPacket.GetPacketID(bytes);
+                int id = WunderPacket.GetPacketID(bytes, offset);
                 if (id < OrderedDefinitions.Count)
                 {
                     return OrderedDefinitions[id].CreateFromBytes(bytes, ref offset);
