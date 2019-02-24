@@ -1,49 +1,57 @@
 ﻿using System;
-using WunderNet;
+
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using WunderNetLayer;
-namespace WunderClient
+using WunderNet;
+using WunderClient;
+namespace WunderNetTest
 {
     class Program
     {
-        static WunderServer ws;
+        static WunderTCPServer ws;
+        static WunderTCPClient wc;
         static WunderNetLayer.WunderLayer decoder;
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            ws = new WunderServer(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml");
-            decoder = new WunderNetLayer.WunderLayer(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml");
+            ws = new WunderTCPServer(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml", IPAddress.Any, 1234);
+            wc = new WunderTCPClient(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml", "localhost", 1234);
+
             ws.NewConnection += NewConnection;
-            ws.AddDataCallback("Message", Message);
+            ws.AddDataCallback("Message", ServerMessage);
             ws.AcceptConnections();
-            TcpClient tcpClient = new TcpClient("localhost", 1234);
-            byte[] buff = new byte[1024];
-            int read = tcpClient.GetStream().Read(buff, 0, 1024);
-            int offset = 0;
-            var resp = decoder.GetFromBytes(buff, ref offset);
-            Console.WriteLine("CLIENT:" + resp.Get("MessageData"));
 
-            var message = decoder.GetNewPacket("Message");
-            message.Set("MessageData", "THIS IS THE ULTIMATE TEST");
-            byte[] b = message.GetBytes();
-            tcpClient.GetStream().Write(b, 0, b.Length);
 
-            tcpClient.Close();
+            wc.AddDataCallback("Message", ClientMessage);
+            wc.Connect();
+
             Console.ReadKey();
         }
 
-        static void Message(System.Net.EndPoint client, WunderPacket packet)
+        static void ClientMessage(WunderPacket packet)
         {
             Console.WriteLine(packet.Get("MessageData"));
+            var resp = wc.GetNewPacket("Message");
+            resp.Set("MessageData", "I'm a client responding to the server!");
+            wc.Send(resp);
+        }
+
+        static void ServerMessage(ClientHandler client, WunderPacket packet)
+        {
+            Console.WriteLine(packet.Get("MessageData"));
+            var resp = ws.GetNewPacket("Message");
+            resp.Set("MessageData", "I'm the Server Responding to the Client Message");
+            client.Send(resp);
+            ws.Disconnect();
         }
 
         static void NewConnection(ClientHandler ch)
         {
-            var resp = decoder.GetNewPacket("Message");
-            resp.Set("MessageData", "ServerResponse");
-            ch.WriteData(resp);
+            var resp = ws.GetNewPacket("Message");
+            resp.Set("MessageData", "I'm The Server Responding to the Client Connection");
+            ch.Send(resp);
         }
     }
 }

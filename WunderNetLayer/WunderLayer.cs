@@ -16,7 +16,7 @@ namespace WunderNetLayer
                 Int16 ids = 0;
                 foreach(var p in packets.PacketList)
                 {
-                    Console.WriteLine(p.ToString() +"\n");
+                    //Console.WriteLine(p.ToString() +"\n");
                     var wp = new WunderPacket() {Name = p.Name, ID = ids++, Version = Convert.ToInt32(packets.Version) };
                     foreach(var f in p.FieldList)
                     {

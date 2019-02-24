@@ -20,41 +20,65 @@ using WunderNetLayer;
 namespace WunderNet
 {
     public delegate void NewConnectionEvent(ClientHandler ch);
-    public class WunderServer
+    public class WunderTCPServer
     {
         public event NewConnectionEvent NewConnection;
-        TcpListener _tcpServer;
-        bool _running = false;
-        ConcurrentBag<ClientHandler> _clients = new ConcurrentBag<ClientHandler>();
-        WunderLayer _decoder;
+
+
+        private TcpListener _tcpServer;
+        private bool _running = false;
+        private ConcurrentBag<ClientHandler> _clients = new ConcurrentBag<ClientHandler>();
+        private WunderLayer _decoder;
         private Dictionary<string, WunderPacketClientReceivedCallback> PacketCallbacks = new Dictionary<string, WunderPacketClientReceivedCallback>();
-        public WunderServer(string xmlpath)
+        public WunderTCPServer(string xmlpath, IPAddress iPAddress, int port)
         {
-            _tcpServer = new TcpListener(new IPEndPoint(IPAddress.Any, 1234));
+            _tcpServer = new TcpListener(new IPEndPoint(iPAddress, port));
             _decoder = new WunderLayer(xmlpath);
         }
 
         public async void AcceptConnections()
         {
-            _running = true;
-            _tcpServer.Start();
-            while (_running)
+            try
             {
-                var client = await _tcpServer.AcceptTcpClientAsync();
-                Console.WriteLine("SERVER:"+client.Client.RemoteEndPoint.ToString());
-                var ch = new ClientHandler(_decoder, client);
-                ch.WunderPacketReceived += WunderPacketClientReceived;
-                _clients.Add(ch);
-                NewConnection?.Invoke(ch);
+                _running = true;
+                _tcpServer.Start();
+                while (_running)
+                {
+                    var client = await _tcpServer.AcceptTcpClientAsync();
+                    //Console.WriteLine("SERVER:" + client.Client.RemoteEndPoint.ToString());
+                    var ch = new ClientHandler(_decoder, client);
+                    ch.WunderPacketReceived += WunderPacketClientReceived;
+                    _clients.Add(ch);
+                    NewConnection?.Invoke(ch);
+                }
+                _tcpServer.Stop();
             }
-            _tcpServer.Stop();
+            catch
+            {
+                Console.WriteLine("Connections Closed");
+            }
         }
 
-        public void WunderPacketClientReceived(EndPoint id, WunderPacket packet)
+        public void Disconnect()
+        {
+            _running = false;
+            _tcpServer.Stop();
+            foreach(var client in _clients)
+            {
+                client.Disconnect();
+            }
+        }
+
+        public WunderPacket GetNewPacket(string packetname)
+        {
+            return _decoder.GetNewPacket(packetname);
+        }
+
+        public void WunderPacketClientReceived(ClientHandler client, WunderPacket packet)
         {
             if (packet != null && PacketCallbacks.ContainsKey(packet.Name))
             {
-                PacketCallbacks[packet.Name]?.Invoke(id, packet);
+                PacketCallbacks[packet.Name]?.Invoke(client, packet);
             }
         }
 

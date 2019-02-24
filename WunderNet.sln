@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WunderNet", "WunderNet\WunderNet.csproj", "{48D5BC33-BDE6-42AE-936E-A3E606300F27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WunderNetTest", "WunderNet\WunderNetTest.csproj", "{48D5BC33-BDE6-42AE-936E-A3E606300F27}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WunderServer", "WunderServer\WunderServer.csproj", "{8A0E582E-A437-48FD-A1FC-9D7E4C75D1F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WunderNetLayer", "WunderNetLayer\WunderNetLayer.csproj", "{3E156904-D1AD-4DF0-A2D4-C3E171D44BCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WunderClient", "WunderClient\WunderClient.csproj", "{69ED9541-48C5-4BFB-8007-5896879B55A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3E156904-D1AD-4DF0-A2D4-C3E171D44BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E156904-D1AD-4DF0-A2D4-C3E171D44BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E156904-D1AD-4DF0-A2D4-C3E171D44BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69ED9541-48C5-4BFB-8007-5896879B55A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69ED9541-48C5-4BFB-8007-5896879B55A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69ED9541-48C5-4BFB-8007-5896879B55A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69ED9541-48C5-4BFB-8007-5896879B55A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

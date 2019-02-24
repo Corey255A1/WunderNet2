@@ -5,7 +5,7 @@ using System.Net;
 using WunderNetLayer;
 namespace WunderNet
 {
-    public delegate void WunderPacketClientReceivedCallback(EndPoint id, WunderPacket packet);
+    public delegate void WunderPacketClientReceivedCallback(ClientHandler client, WunderPacket packet);
     public class ClientHandler
     {
         TcpClient _client;
@@ -19,13 +19,17 @@ namespace WunderNet
             _processor.PacketReceived += PacketReceived;
             _processor.BeginReadData();
         }
-        public async void WriteData(WunderPacket p)
+        public async void Send(WunderPacket p)
         {
             await _processor.WriteData(p.GetBytes());
         }
-        public void PacketReceived(WunderPacket wp)
+        public void Disconnect()
         {
-            WunderPacketReceived?.Invoke(_client.Client.RemoteEndPoint, wp);
+            _client.Close();
+        }
+        private void PacketReceived(WunderPacket wp)
+        {
+            WunderPacketReceived?.Invoke(this, wp);
         }
     }
 }
