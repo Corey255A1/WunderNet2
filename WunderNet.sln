@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WunderNetLayer", "WunderNet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WunderClient", "WunderClient\WunderClient.csproj", "{69ED9541-48C5-4BFB-8007-5896879B55A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WunderNetTestServer", "WunderNetTestServer\WunderNetTestServer.csproj", "{7AAF8BE7-D537-4558-AF1A-1CF9831640F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WunderNetTestClient", "WunderNetTestClient\WunderNetTestClient.csproj", "{54E4E9D5-4D9F-490F-A491-861AAC929F5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{69ED9541-48C5-4BFB-8007-5896879B55A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69ED9541-48C5-4BFB-8007-5896879B55A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69ED9541-48C5-4BFB-8007-5896879B55A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AAF8BE7-D537-4558-AF1A-1CF9831640F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AAF8BE7-D537-4558-AF1A-1CF9831640F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AAF8BE7-D537-4558-AF1A-1CF9831640F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AAF8BE7-D537-4558-AF1A-1CF9831640F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54E4E9D5-4D9F-490F-A491-861AAC929F5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54E4E9D5-4D9F-490F-A491-861AAC929F5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54E4E9D5-4D9F-490F-A491-861AAC929F5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54E4E9D5-4D9F-490F-A491-861AAC929F5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,6 +8,10 @@ namespace WunderNet
     public delegate void WunderPacketClientReceivedCallback(ClientHandler client, WunderPacket packet);
     public class ClientHandler
     {
+        public string ClientInfo
+        {
+            get { return _client.Client.RemoteEndPoint.ToString(); }
+        }
         TcpClient _client;
         StreamProcessor _processor;
         public WunderPacketClientReceivedCallback WunderPacketReceived;
