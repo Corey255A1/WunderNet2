@@ -15,8 +15,13 @@ namespace WunderNetTest
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            ws = new WunderTCPServer(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml", IPAddress.Any, 1234);
-            wc = new WunderTCPClient(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml", "localhost", 1234);
+            string xmlPathDefault = @"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml";
+            if(!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                xmlPathDefault = @"/home/corey/Code/WunderNet2/WunderServer/ExampleNet.xml";
+            }
+            ws = new WunderTCPServer(xmlPathDefault, IPAddress.Any, 1234);
+            wc = new WunderTCPClient(xmlPathDefault, "localhost", 1234);
 
             ws.NewConnection += NewConnection;
             ws.AddDataCallback("Message", ServerMessage);

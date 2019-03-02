@@ -10,7 +10,12 @@ namespace WunderNetTestServer
         static void Main(string[] args)
         {
             Console.WriteLine("WunderNet Test Server");
-            ws = new WunderTCPServer(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml", IPAddress.Any, 1234);
+            string xmlPathDefault = @"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml";
+            if(!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                xmlPathDefault = @"/home/corey/Code/WunderNet2/WunderServer/ExampleNet.xml";
+            }
+            ws = new WunderTCPServer(xmlPathDefault, IPAddress.Any, 1234);
             ws.NewConnection += NewConnection;
             ws.AddDataCallback("Message", ServerMessage);
             ws.AddDataCallback("VariableLengthPacket", ServerMessage);

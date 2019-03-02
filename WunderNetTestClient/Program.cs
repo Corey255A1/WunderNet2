@@ -9,7 +9,12 @@ namespace WunderNetTestClient
         static void Main(string[] args)
         {
             Console.WriteLine("WunderNet Test Client");
-            wc = new WunderTCPClient(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml", "localhost", 1234);
+            string xmlPathDefault = @"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml";
+            if(!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                xmlPathDefault = @"/home/corey/Code/WunderNet2/WunderServer/ExampleNet.xml";
+            }
+            wc = new WunderTCPClient(xmlPathDefault, "localhost", 1234);
             wc.AddDataCallback("Message", ClientMessage);
             wc.Connect();
 
