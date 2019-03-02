@@ -34,6 +34,7 @@ namespace WunderNet
         {
             _tcpServer = new TcpListener(new IPEndPoint(iPAddress, port));
             _decoder = new WunderLayer(xmlpath);
+            Console.WriteLine(_decoder.ToString());
         }
 
         public async void AcceptConnections()

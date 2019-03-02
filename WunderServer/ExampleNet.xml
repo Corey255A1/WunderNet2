@@ -17,6 +17,14 @@ DescribePacket - Server will respond with the XML description
     <Packet Name="Message">
       <Field Name="MessageData" Type="String" Size="256"/>
     </Packet>
+  <Packet Name="VariableLengthPacket" Type="Variable">
+    <!--<Field Name="VariableCount" Type="Byte" /> This Type is Built In to Variable Packets -->
+    <!--Fields Added to a Variable Packet have an additional Byte Associated with each field that indicate its ID-->
+    <!--<Field Name="FieldOneID" Type="Byte"/>-->
+    <Field Name="FieldOne" Type="UInt32"/>
+    <!--<Field Name="FieldStringID" Type="Byte"/>-->
+    <Field Name ="FieldString" Type="String" Size="32"/>
+  </Packet>
     
     <Packet Name="RequestInfo">
         <Field Name="InfoType" Type="Int32"/>

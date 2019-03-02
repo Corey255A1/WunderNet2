@@ -7,6 +7,7 @@ namespace WunderNetLayer.Serializers
     {
         [XmlAttribute("Version")]
         public string Version;
+
         [XmlElement("Packet")]
         public Packet[] PacketList;
     }
@@ -15,6 +16,8 @@ namespace WunderNetLayer.Serializers
     {
         [XmlAttribute("Name")]
         public string Name;
+        [XmlAttribute("Type")]
+        public string PacketType;
         [XmlElement("Field")]
         public Field[] FieldList;
 

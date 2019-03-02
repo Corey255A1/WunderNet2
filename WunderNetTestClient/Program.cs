@@ -18,7 +18,10 @@ namespace WunderNetTestClient
 
         static void ClientMessage(WunderPacket packet)
         {
-            Console.WriteLine(packet.Get("MessageData"));
+            Console.WriteLine(packet.ToString());
+            var toSend = wc.GetNewPacket("VariableLengthPacket");
+            toSend.Set("FieldOne", 42);
+            wc.Send(toSend);
         }
     }
 }

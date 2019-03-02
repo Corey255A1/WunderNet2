@@ -55,7 +55,7 @@ namespace WunderNetLayer.Utilities
                     return Encoding.ASCII.GetBytes(s, 0, size);
                 }
             }
-            else if (type == typeof(Byte)) return BitConverter.GetBytes((Byte)obj);
+            else if (type == typeof(Byte)) return new Byte[] { (Byte)obj };
             else if (type == typeof(Int16)) return BitConverter.GetBytes((Int16)obj);
             else if (type == typeof(Int32)) return BitConverter.GetBytes((Int32)obj);
             else if (type == typeof(Int64)) return BitConverter.GetBytes((Int64)obj);

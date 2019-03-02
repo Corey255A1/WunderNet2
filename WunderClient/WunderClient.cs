@@ -28,11 +28,18 @@ namespace WunderClient
 
         public void Connect()
         {
-            _client = new TcpClient(_ipAddress, _port);
-            
-            _processor = new StreamProcessor(_decoder, _client.Client.RemoteEndPoint, _client.GetStream(), 1024);
-            _processor.PacketReceived += PacketReceived;
-            _processor.BeginReadData();
+            try
+            {
+                _client = new TcpClient(_ipAddress, _port);
+
+                _processor = new StreamProcessor(_decoder, _client.Client.RemoteEndPoint, _client.GetStream(), 1024);
+                _processor.PacketReceived += PacketReceived;
+                _processor.BeginReadData();
+            }
+            catch
+            {
+            }
+
         }
 
         public void Disconnect()

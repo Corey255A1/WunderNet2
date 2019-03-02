@@ -9,6 +9,7 @@ namespace WunderNetLayer
         public int ByteSize;
         public Type ValueType;
         public object Value;
+
         public FieldDefinition(string name, string type, int count)
         {
             Init(name, HelperFunctions.StringToType(type), count);
@@ -32,16 +33,17 @@ namespace WunderNetLayer
             }
         }
 
-        public FieldDefinition CreateNew()
+        public virtual FieldDefinition CreateNew()
         {
             return new FieldDefinition(this.Name, this.ValueType, this.Count);
         }
 
-        public void SetValue(object value)
+        public virtual void SetValue(object value)
         {
             try
             {
                 this.Value = HelperFunctions.GenericValueSet(this.ValueType, value);
+
             }
             catch
             {
@@ -62,6 +64,46 @@ namespace WunderNetLayer
         {
             return String.Format("[{0}] = {1}", this.Name, this.Value??"");
         }
-
     }
+
+    public class FieldHeaderDefinition : FieldDefinition
+    {
+        public FieldHeaderDefinition(string name, byte id) :
+            base(name, HelperFunctions.StringToType("Byte"), 0)
+        {
+            this.Value = id;
+        }
+
+        public override FieldDefinition CreateNew()
+        {
+            return new FieldHeaderDefinition(this.Name, (byte)this.Value);
+        }
+    }
+
+    public class VariableFieldDefinition : FieldDefinition
+    {
+        public bool IsIncluded = false;
+        public VariableFieldDefinition(string name, string type, int count) :
+            base(name, HelperFunctions.StringToType(type), count)
+        {
+        }
+
+        public VariableFieldDefinition(string name, Type valuetype, int count) :
+            base(name, valuetype, count)
+        {
+        }
+
+        public override FieldDefinition CreateNew()
+        {
+            return new VariableFieldDefinition(this.Name, this.ValueType, this.Count);
+        }
+
+        public override void SetValue(object value)
+        {
+            base.SetValue(value);
+            IsIncluded = true; //Assuming if you set it, you want it sent out
+        }
+    }
+
+
 }

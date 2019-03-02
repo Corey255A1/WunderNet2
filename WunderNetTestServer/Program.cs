@@ -13,13 +13,15 @@ namespace WunderNetTestServer
             ws = new WunderTCPServer(@"D:\Documents\CodeProjects\WunderNet2\WunderServer\ExampleNet.xml", IPAddress.Any, 1234);
             ws.NewConnection += NewConnection;
             ws.AddDataCallback("Message", ServerMessage);
+            ws.AddDataCallback("VariableLengthPacket", ServerMessage);
+            Console.WriteLine(ws.GetNewPacket("VariableLengthPacket").ToString());
             ws.AcceptConnections();
 
             Console.ReadKey();
         }
         static void ServerMessage(ClientHandler client, WunderPacket packet)
         {
-            Console.WriteLine(packet.Get("MessageData"));
+            Console.WriteLine(packet.ToString());
         }
 
         static void NewConnection(ClientHandler ch)
