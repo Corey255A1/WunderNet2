@@ -56,18 +56,19 @@ namespace WunderNet
             }
             catch
             {
+                _running = false;
                 Console.WriteLine("Connections Closed");
             }
         }
 
         public void Disconnect()
-        {
-            _running = false;
-            _tcpServer.Stop();
+        {                        
             foreach(var client in _clients)
             {
                 client.Disconnect();
             }
+            _running = false;
+            _tcpServer.Stop();
         }
 
         public WunderPacket GetNewPacket(string packetname)

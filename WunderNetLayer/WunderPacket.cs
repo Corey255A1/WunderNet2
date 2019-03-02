@@ -34,26 +34,33 @@ namespace WunderNetLayer
 
         public override WunderPacket CreateFromBytes(byte[] bytes, ref int offset)
         {
-            if (bytes.Length - offset >= this.PacketSize)
+            //if (bytes.Length - offset >= this.PacketSize)
+            //Because the size of this packet is variable.. checking the size doesn't work
+            try
             {
-                offset += DATAOFFSET;
+                int tempoffset = offset + DATAOFFSET;
                 WunderPacketVariable newwp = this.CreateNew() as WunderPacketVariable;
 
                 //First field is the count of fields that were sent
-                offset = newwp.OrderdedFields[0].SetBytes(bytes, offset);
+                tempoffset = newwp.OrderdedFields[0].SetBytes(bytes, tempoffset);
                 byte count = (byte)newwp.Get("VariableCount");
 
                 //Byte - FieldID
                 //Bytes=>TheField;
                 for(int f=0; f<count; ++f)
                 {
-                    int fieldID = (bytes[offset++]+1)*2;
+                    int fieldID = (bytes[tempoffset++]+1)*2;
                     if (fieldID < OrderdedFields.Count)
                     {
-                        offset = newwp.OrderdedFields[fieldID].SetBytes(bytes, offset);
+                        tempoffset = newwp.OrderdedFields[fieldID].SetBytes(bytes, tempoffset);
                     }
                 }
+                offset = tempoffset;
                 return newwp;
+            }
+            catch
+            {
+                //Couldn't set the bytes
             }
 
             return null;
@@ -78,7 +85,7 @@ namespace WunderNetLayer
         public override byte[] GetBytes()
         {            
             int offset = 0;
-            byte[] b = this.GetEmptyBuffer(ref offset);
+            byte[] b = this.GetEmptyBuffer(ref offset); // be size of all possible packets
             int countbyteoffset = offset++; //Key this point to set the count of fields we are sending
             
             //FIELDS - Skip the First VariableCount field
@@ -98,6 +105,8 @@ namespace WunderNetLayer
                     b[countbyteoffset]++;
                 }
             }
+            //Resize the array to the actual size of the packet
+            Array.Resize(ref b, offset);
             return b;
         }
     }
@@ -194,6 +203,24 @@ namespace WunderNetLayer
             }
 
             return null;
+        }
+
+        public bool Clear(string fieldname)
+        {
+            if (this.Fields.ContainsKey(fieldname))
+            {
+                try
+                {
+                    this.Fields[fieldname].ClearValue();
+                    return true;
+                }
+                catch
+                {
+                    Console.WriteLine("Field [" + fieldname + "] Set Value failed...");
+                    return false;
+                }
+            }
+            return false;
         }
 
         public bool Set(string fieldname, object value)

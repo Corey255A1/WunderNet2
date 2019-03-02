@@ -20,8 +20,21 @@ namespace WunderNetTestClient
         {
             Console.WriteLine(packet.ToString());
             var toSend = wc.GetNewPacket("VariableLengthPacket");
-            toSend.Set("FieldOne", 42);
-            wc.Send(toSend);
+            var resp = wc.GetNewPacket("Message");
+            for (int i = 0; i < 50; i++)
+            {
+                toSend.Set("FieldOne", 42);
+                toSend.Clear("FieldString");
+                wc.Send(toSend);
+
+                
+                resp.Set("MessageData", "I'm The Client Sending a lot of data!");
+                wc.Send(resp);
+
+                toSend.Set("FieldOne", 37);
+                toSend.Set("FieldString", "A Variable Packet");
+                wc.Send(toSend);
+            }
         }
     }
 }

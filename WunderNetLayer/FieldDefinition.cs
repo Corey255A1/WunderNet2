@@ -38,6 +38,11 @@ namespace WunderNetLayer
             return new FieldDefinition(this.Name, this.ValueType, this.Count);
         }
 
+        public virtual void ClearValue()
+        {
+            this.Value = HelperFunctions.GetDefault(this.ValueType);
+        }
+
         public virtual void SetValue(object value)
         {
             try
@@ -102,6 +107,11 @@ namespace WunderNetLayer
         {
             base.SetValue(value);
             IsIncluded = true; //Assuming if you set it, you want it sent out
+        }
+        public override void ClearValue()
+        {
+            base.ClearValue();
+            IsIncluded = false;
         }
     }
 

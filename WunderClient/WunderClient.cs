@@ -8,10 +8,16 @@ namespace WunderClient
         TcpClient _client;
         StreamProcessor _processor;
         WunderLayer _decoder;
-        string _ipAddress;
-  
+        string _ipAddress;  
         int _port;
+
         private Dictionary<string, WunderPacketReceivedCallback> PacketCallbacks = new Dictionary<string, WunderPacketReceivedCallback>();
+
+        public bool Connected
+        {
+            get { return _client != null ? _client.Connected : false; }
+        }
+
         public WunderTCPClient(string xmlPath, string ipAddress, int port)
         {
             _ipAddress = ipAddress;
