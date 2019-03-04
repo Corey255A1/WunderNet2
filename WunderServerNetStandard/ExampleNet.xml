@@ -1,0 +1,55 @@
+<!-- All Packets have a header
+[Size in Bytes][Field]
+[2][\n\0]
+[2][ID] Don't need size, both ends know the size 
+[4][Version] To Ensure, packets line up
+
+Built in packets include
+GetVersionInformation - Server will inform client 
+    which version of serializer it is using
+GetPacketTypes - Server will send a list of Packets and Sizes
+    to the client, which can be used by client to determine
+    the differences
+DescribePacket - Server will respond with the XML description
+    of the packet with the indicated ID
+-->
+<Packets Version="0000">
+    <Packet Name="Message">
+      <Field Name="MessageData" Type="String" Size="256"/>
+    </Packet>
+  <Packet Name="VariableLengthPacket" Type="Variable">
+    <!--<Field Name="VariableCount" Type="Byte" /> This Type is Built In to Variable Packets -->
+    <!--Fields Added to a Variable Packet have an additional Byte Associated with each field that indicate its ID-->
+    <!--<Field Name="FieldOneID" Type="Byte"/>-->
+    <Field Name="FieldOne" Type="UInt32"/>
+    <!--<Field Name="FieldStringID" Type="Byte"/>-->
+    <Field Name ="FieldString" Type="String" Size="32"/>
+  </Packet>
+    
+    <Packet Name="RequestInfo">
+        <Field Name="InfoType" Type="Int32"/>
+        <Field Name="X" Type="Int32"/>
+        <Field Name="Y" Type="Int32"/>
+    </Packet>
+    
+    <Packet Name="WorldInfo">
+        <Field Name="Width" Type="Int32"/>
+        <Field Name="Height" Type="Int32"/>
+    </Packet>    
+
+    <Packet Name="CellInfo">
+        <Field Name="CellType" Type="Byte"/>
+        <Field Name="X" Type="Int32"/>
+        <Field Name="Y" Type="Int32"/>
+    </Packet>
+
+    <Packet Name="ObjectInfo">
+        <Field Name="ObjectID" Type="String" Size="32"/>
+        <Field Name="ObjectType" Type="Int32"/>
+        <Field Name="X" Type="Int32"/>
+        <Field Name="Y" Type="Int32"/>
+        <Field Name="VX" Type="Double"/>
+        <Field Name="VY" Type="Double"/>
+    </Packet>
+
+</Packets>

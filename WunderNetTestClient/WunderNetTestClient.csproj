@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WunderClient\WunderClient.csproj" />
+    <ProjectReference Include="..\WunderClientNetStandard\WunderClientNetStandard.csproj" />
   </ItemGroup>
 
 </Project>
